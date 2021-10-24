@@ -40,7 +40,7 @@ void setup() {
     Serial.println("MDNS responder started");
   }
 }
-1
+
 void loop() {
   // put your main code here, to run repeatedly:
   MDNS.update();
