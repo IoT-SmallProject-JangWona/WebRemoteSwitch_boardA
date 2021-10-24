@@ -49,7 +49,7 @@ void loop() {
 
   Serial.print("[HTTP] begin...\n");
   if(state == true){
-    if(http.begin(client, "http://172.30.1.7/Relay_toggle")){
+    if(http.begin(client, "http://172.30.1.23/Relay_toggle")){
       Serial.print("[HTTP] GET...\n");
       
       int httpCode = http.GET();
