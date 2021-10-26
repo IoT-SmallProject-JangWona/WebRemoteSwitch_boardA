@@ -86,7 +86,7 @@ void loop() {
     } else {
       Serial.printf("[HTTP] Unable to connect\n");
     }
-    state_on = false; // state_off value reset
+    state_on = false; // state_on value reset
     }
     
 }
