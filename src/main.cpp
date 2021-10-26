@@ -3,16 +3,18 @@
 #include <ESP8266mDNS.h>
 
 const char* ssid = "1118-2.4G";
-const char* password = "kpu123456!";
+const char* password = "kpu123456!"; 
 
 #include <WiFiClient.h>
 #include <ESP8266HTTPClient.h>
 
 const int pushSW = 2;
-boolean state = false;
+boolean state_on = false;
+boolean state_off= true;
 
 IRAM_ATTR void buttonClicked(){
-   state = true;
+   state_on = !state_on;
+   state_off = !state_off;
 }
 
 void setup() {
@@ -20,6 +22,7 @@ void setup() {
   Serial.begin(115200);
   pinMode(pushSW,INPUT_PULLUP);
   attachInterrupt(pushSW,buttonClicked,FALLING);
+  
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid,password);
   Serial.println("Connecting...");
@@ -46,16 +49,32 @@ void loop() {
   MDNS.update();
   WiFiClient client;
   HTTPClient http;
+    
+    if(state_on == true && state_off == false){ // Only state_on is true
+      Serial.print("[HTTP] begin...\n");
+      if(http.begin(client, "http://172.30.1.50/Relay_on")){
+        int httpCode = http.GET();
+        if(httpCode > 0){
+        Serial.printf("[HTTP] GET ... code: %d\n",httpCode);
+        if(httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY){
+          String payload = http.getString();
+          Serial.println(payload);
+        } 
+      }else {
+        Serial.printf("[HTTP] GET....failed, error: %s\n",http.errorToString(httpCode).c_str());
+      } 
+      http.end();
+    } else {
+      Serial.printf("[HTTP] Unable to connect\n");
+    }
+    state_on = false; // state_on value reset
+    }
 
-  Serial.print("[HTTP] begin...\n");
-  if(state == true){
-    if(http.begin(client, "http://172.30.1.23/Relay_toggle")){
-      Serial.print("[HTTP] GET...\n");
-      
+    if(state_on == true && state_off == true){ // state_on, state_off both true
+      if(http.begin(client, "http://172.30.1.50/Relay_off")){
       int httpCode = http.GET();
       if(httpCode > 0){
         Serial.printf("[HTTP] GET ... code: %d\n",httpCode);
-
         if(httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY){
           String payload = http.getString();
           Serial.println(payload);
@@ -67,7 +86,7 @@ void loop() {
     } else {
       Serial.printf("[HTTP] Unable to connect\n");
     }
-    state = false;
-  }
-  delay(1000);
+    state_on = false; // state_off value reset
+    }
+    
 }

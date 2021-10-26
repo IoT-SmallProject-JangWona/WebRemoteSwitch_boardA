@@ -116,3 +116,6 @@
 .pio/build/esp12e/libfc8/ESP8266HTTPClient/ESP8266HTTPClient.cpp.o
 .pio/build/esp12e/src/main.cpp.o
 .vscode/settings.json
+.vscode/c_cpp_properties.json
+.vscode/extensions.json
+.vscode/launch.json
