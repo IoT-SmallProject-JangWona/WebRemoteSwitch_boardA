@@ -52,7 +52,7 @@ void loop() {
     
     if(state_on == true && state_off == false){ // Only state_on is true
       Serial.print("[HTTP] begin...\n");
-      if(http.begin(client, "http://172.30.1.50/Relay_on")){
+      if(http.begin(client, "http://172.30.1.8/Relay_on")){
         int httpCode = http.GET();
         if(httpCode > 0){
         Serial.printf("[HTTP] GET ... code: %d\n",httpCode);
@@ -71,7 +71,7 @@ void loop() {
     }
 
     if(state_on == true && state_off == true){ // state_on, state_off both true
-      if(http.begin(client, "http://172.30.1.50/Relay_off")){
+      if(http.begin(client, "http://172.30.1.8/Relay_off")){
       int httpCode = http.GET();
       if(httpCode > 0){
         Serial.printf("[HTTP] GET ... code: %d\n",httpCode);
